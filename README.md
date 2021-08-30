@@ -1,3 +1,35 @@
+# 使用方式
+## 该pod库源自YYImage，直接在Podfile指定本git镜像源即可，如下：
+```
+# 原YYImage未适配iOS14，导致iOS14无法显示图片。以下是Fly.W个人针对YYImage适配后的库
+pod 'YYImage', :git => 'https://github.com/earlyfly/YYImage.git/'
+```
+
+
+
+# Fly.W - iOS14适配
+## 解决iOS14 系统 YBImageBrowser显示图片黑屏问题
+
+#### YBImageBrowser库的问题没有适配 14 系统
+出现原因：iOS 14系统调用方法- (void)displayLayer:(CALayer *)layer，YYAnimatedImageView没有正确处理。
+解决：重写YYAnimatedImageView.m 的中的displayLayer方法大概在529 行
+
+```
+-(void)displayLayer:(CALayer *)layer {
+    UIImage *currentFrame = _curFrame;
+
+    if (!currentFrame) {
+        currentFrame = self.image;
+    }
+
+    if (currentFrame) {
+        layer.contentsScale = currentFrame.scale;
+        layer.contents = (__bridge id)currentFrame.CGImage;
+    }
+}
+```
+
+
 YYImage
 ==============
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/ibireme/YYImage/master/LICENSE)&nbsp;
